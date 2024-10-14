@@ -23,6 +23,7 @@ export default function App() {
       console.log(advice.advice)
       setLoading(false)
       setAdvice(advice.advice)
+      setCount(prev => prev + 1)
     } catch (error) {
       setLoading(false)
       setError('There was an Error')
@@ -43,6 +44,8 @@ export default function App() {
       <button onClick={handleAdvice}>Get advice</button>
 
       <p>{advice}</p>
+
+      <h2>Count: {count}</h2>
     </div>
   )
 }
