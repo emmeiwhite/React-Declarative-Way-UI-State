@@ -1,25 +1,48 @@
-import logo from './logo.svg';
-import './App.css';
+import { useEffect, useState } from 'react'
 
-function App() {
+// In React, we'll render UI with state and state updates Declaratively
+// React does DOM manipulation for us under the hood!
+const url = 'https://api.adviceslip.com/advice'
+
+export default function App() {
+  const [advice, setAdvice] = useState('')
+  const [count, setCount] = useState(0)
+  const [loading, setLoading] = useState(false)
+  const [error, setError] = useState('')
+
+  const handleAdvice = async () => {
+    setLoading(true)
+    try {
+      const response = await fetch(url)
+      if (!response.ok) {
+        throw new Error('Could not fetch the data')
+      }
+      const data = await response.json()
+      console.log(data)
+      const { slip: advice } = data
+      console.log(advice.advice)
+      setLoading(false)
+      setAdvice(advice.advice)
+    } catch (error) {
+      setLoading(false)
+      setError('There was an Error')
+    }
+  }
+
+  if (loading) {
+    return <div>Loading ...</div>
+  }
+
+  if (error) {
+    return <div>{error}</div>
+  }
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
-}
+    <div>
+      <h1>Get Some Advices</h1>
+      <button onClick={handleAdvice}>Get advice</button>
 
-export default App;
+      <p>{advice}</p>
+    </div>
+  )
+}
